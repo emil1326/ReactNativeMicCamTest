@@ -17,7 +17,6 @@ export default function HomeScreen() {
             <Text style={styles.title}>Accueil</Text>
           </View>
           <Pressable
-            accessibilityRole="button"
             hitSlop={10}
             style={styles.iconButton}
             onPress={() => router.push('/settings')}

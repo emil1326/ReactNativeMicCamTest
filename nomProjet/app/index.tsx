@@ -62,9 +62,6 @@ export default function LoginScreen() {
         <View style={styles.card}>
           <Text style={styles.kicker}>KBK Projet 2026</Text>
           <Text style={styles.title}>Connexion</Text>
-          <Text style={styles.description}>
-            Cette page est en dehors des tabs pour servir d'écran d'accueil.
-          </Text>
 
           <TextInput
             autoCapitalize="none"
@@ -87,7 +84,7 @@ export default function LoginScreen() {
           />
 
           <Pressable style={styles.button} onPress={handleConnect}>
-            <Text style={styles.buttonText}>{isSaving ? 'Sauvegarde...' : 'Se connecter'}</Text>
+            <Text style={styles.buttonText}>{isSaving ? 'Chargement...' : 'Se connecter / créer un compte'}</Text>
           </Pressable>
 
           {statusMessage ? <Text style={styles.status}>{statusMessage}</Text> : null}
@@ -131,11 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: '700',
     color: '#0f172a',
-  },
-  description: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: '#475569',
   },
   input: {
     borderWidth: 1,

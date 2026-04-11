@@ -78,7 +78,6 @@ export default function SettingsScreen() {
                             return (
                                 <Pressable
                                     key={tone.label}
-                                    accessibilityRole="button"
                                     accessibilityState={{ selected: isSelected }}
                                     style={styles.quickToneItem}
                                     onPress={() => handleTonePress(tone)}
