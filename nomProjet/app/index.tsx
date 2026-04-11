@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import { saveStudentToFirestore } from '../firebase/students';
+import { getStudentFromFirestore, saveStudentToFirestore } from '../firebase/students';
 import { useAppDispatch } from '../store/hooks';
 import { setStudent } from '../store/studentSlice';
 import { createStudent } from '../types/student';
@@ -31,16 +31,18 @@ export default function LoginScreen() {
       return;
     }
 
-    const nextStudent = createStudent({
-      name: trimmedName,
-      isConnected: true,
-    });
-
-    dispatch(setStudent(nextStudent));
     setIsSaving(true);
     setStatusMessage(null);
 
     try {
+      const existingStudent = await getStudentFromFirestore(trimmedName);
+      const nextStudent = createStudent({
+        ...(existingStudent ?? {}),
+        name: trimmedName,
+        isConnected: true,
+      });
+
+      dispatch(setStudent(nextStudent));
       await saveStudentToFirestore(nextStudent);
       router.replace('/home');
     } catch (error) {

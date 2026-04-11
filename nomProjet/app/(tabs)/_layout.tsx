@@ -19,25 +19,32 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          headerTitle: 'Accueil',
-          title: 'Accueil',
-          tabBarIcon: createIcon('home-outline'),
+          title: 'Profil',
+          tabBarIcon: createIcon('person-outline'),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="tab_1/index"
         options={{
-          headerTitle: 'Tab 1',
-          title: 'Tab 1',
-          tabBarIcon: createIcon('bus-outline'),
+          title: 'Camera',
+          tabBarIcon: createIcon('camera-outline'),
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="tab_2/index"
         options={{
-          headerTitle: 'Tab 2',
-          title: 'Tab 2',
-          tabBarIcon: createIcon('airplane-outline'),
+          title: 'Audio',
+          tabBarIcon: createIcon('mic-outline'),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
     </Tabs>
