@@ -1,16 +1,7 @@
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-import type { StudentState } from '../store/studentSlice';
+import type { Student } from '../types/student';
 import { firestore } from './client';
-
-export type StudentRecord = {
-  name: string;
-  image: string | null;
-  voice: string | null;
-  color: string;
-  isConnected: boolean;
-  updatedAt?: unknown;
-};
 
 const normalizeStudentId = (studentName: string) =>
   studentName.trim().toLowerCase().replace(/\s+/g, '-');
@@ -18,14 +9,14 @@ const normalizeStudentId = (studentName: string) =>
 const studentDocument = (studentName: string) =>
   doc(firestore, 'students', normalizeStudentId(studentName));
 
-export async function saveStudentToFirestore(student: StudentState) {
+export async function saveStudentToFirestore(student: Student): Promise<Student> {
   const studentName = student.name.trim();
 
   if (!studentName) {
     throw new Error('Student name is required to save a student profile.');
   }
 
-  const record: StudentRecord = {
+  const studentData: Student = {
     name: studentName,
     image: student.image,
     voice: student.voice,
@@ -33,24 +24,17 @@ export async function saveStudentToFirestore(student: StudentState) {
     isConnected: student.isConnected,
   };
 
-  await setDoc(
-    studentDocument(studentName),
-    {
-      ...record,
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true },
-  );
+  await setDoc(studentDocument(studentName), studentData, { merge: true });
 
-  return record;
+  return studentData;
 }
 
-export async function getStudentFromFirestore(studentName: string) {
+export async function getStudentFromFirestore(studentName: string): Promise<Student | null> {
   const snapshot = await getDoc(studentDocument(studentName));
 
   if (!snapshot.exists()) {
     return null;
   }
 
-  return snapshot.data() as StudentRecord;
+  return snapshot.data() as Student;
 }

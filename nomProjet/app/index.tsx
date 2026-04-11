@@ -13,6 +13,7 @@ import {
 import { saveStudentToFirestore } from '../firebase/students';
 import { useAppDispatch } from '../store/hooks';
 import { setStudent } from '../store/studentSlice';
+import { createStudent } from '../types/student';
 
 export default function LoginScreen() {
   const [name, setName] = useState('');
@@ -30,14 +31,10 @@ export default function LoginScreen() {
       return;
     }
 
-    const nextStudent = {
+    const nextStudent = createStudent({
       name: trimmedName,
-      password,
-      image: null,
-      voice: null,
-      color: '#f8fafc',
       isConnected: true,
-    };
+    });
 
     dispatch(setStudent(nextStudent));
     setIsSaving(true);
