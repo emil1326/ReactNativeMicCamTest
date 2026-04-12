@@ -14,6 +14,7 @@ import { getStudentFromFirestore, saveStudentToFirestore } from '../firebase/stu
 import { useAppDispatch } from '../store/hooks';
 import { setStudent } from '../store/studentSlice';
 import { createStudent } from '../types/student';
+import { normalizePasswordForStorage, passwordMatches } from '../utils/password';
 
 export default function LoginScreen() {
   const [name, setName] = useState('');
@@ -25,6 +26,7 @@ export default function LoginScreen() {
 
   const handleConnect = async () => {
     const trimmedName = name.trim();
+    const enteredPassword = password;
 
     if (!trimmedName) {
       setStatusMessage('Entre un nom avant de te connecter.');
@@ -36,9 +38,18 @@ export default function LoginScreen() {
 
     try {
       const existingStudent = await getStudentFromFirestore(trimmedName);
+
+      if (existingStudent && !(await passwordMatches(existingStudent.password, enteredPassword))) {
+        setStatusMessage('Mot de passe incorrect.');
+        return;
+      }
+
+      const nextPassword = await normalizePasswordForStorage(enteredPassword, existingStudent?.password);
+
       const nextStudent = createStudent({
         ...(existingStudent ?? {}),
         name: trimmedName,
+        password: nextPassword,
         isConnected: true,
       });
 
@@ -47,7 +58,7 @@ export default function LoginScreen() {
       router.replace('/home');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erreur inconnue Firebase.';
-      setStatusMessage(`Impossible de sauvegarder dans Firebase: ${message}`);
+      setStatusMessage(`Impossible de charger le compte: ${message}`);
     } finally {
       setIsSaving(false);
     }
@@ -62,19 +73,14 @@ export default function LoginScreen() {
         <View style={styles.card}>
           <Text style={styles.kicker}>KBK Projet 2026</Text>
           <Text style={styles.title}>Connexion</Text>
-
           <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
             placeholder="Nom"
             placeholderTextColor="#94a3b8"
             style={styles.input}
-            value={name}
             onChangeText={setName}
+            value={name}
           />
           <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
             placeholder="Mot de passe"
             placeholderTextColor="#94a3b8"
             secureTextEntry

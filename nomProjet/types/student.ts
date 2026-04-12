@@ -1,5 +1,6 @@
 export type Student = {
   name: string;
+  password: string;
   image: string | null;
   voice: string | null;
   color: string;
@@ -8,6 +9,7 @@ export type Student = {
 
 const defaultStudent: Student = {
   name: '',
+  password: '',
   image: null,
   voice: null,
   color: '#f8fafc',

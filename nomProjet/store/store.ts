@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { createTransform, persistReducer, persistStore, type PersistConfig } from 'redux-persist';
+import { persistReducer, persistStore, type PersistConfig } from 'redux-persist';
 import type { Reducer } from 'redux';
 
 import { studentReducer } from './studentSlice';
@@ -11,25 +11,10 @@ const rootReducer = combineReducers({
 
 type StoreState = ReturnType<typeof rootReducer>;
 
-const studentTransform = createTransform(
-  (inboundState) => inboundState,
-  (outboundState) => {
-    if (!outboundState || typeof outboundState !== 'object') {
-      return outboundState;
-    }
-
-    const { password: _password, ...student } = outboundState as Record<string, unknown>;
-
-    return student;
-  },
-  { whitelist: ['student'] },
-);
-
 const persistConfig: PersistConfig<StoreState> = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['student'],
-  transforms: [studentTransform],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer as Reducer<StoreState>);
