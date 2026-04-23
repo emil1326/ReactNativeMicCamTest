@@ -11,6 +11,9 @@ const studentSlice = createSlice({
     setStudent(_state, action: PayloadAction<Student>) {
       return action.payload;
     },
+    updateStudent(state, action: PayloadAction<Partial<Student>>) {
+      return { ...state, ...action.payload };
+    },
     resetStudent() {
       return initialState;
     },
@@ -20,6 +23,7 @@ const studentSlice = createSlice({
 export const {
   resetStudent,
   setStudent,
+  updateStudent,
 } = studentSlice.actions;
 
 export const studentReducer = studentSlice.reducer;
