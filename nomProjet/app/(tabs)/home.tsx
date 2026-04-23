@@ -1,12 +1,48 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View, Image } from 'react-native';
+import { Pressable, StyleSheet, Text, View, Image, Alert } from 'react-native';
+import { Audio } from 'expo-av';
+import { useState } from 'react';
 
 import { useCurrentStudent } from '../../store/hooks';
 
 export default function HomeScreen() {
-  const { color, isConnected, name, image } = useCurrentStudent();
+  const { color, isConnected, name, image, voice } = useCurrentStudent();
   const router = useRouter();
+  const [sound, setSound] = useState<Audio.Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  async function playVoice() {
+    if (!voice) {
+      Alert.alert('Aucun audio', 'Enregistrez d\'abord un message audio');
+      return;
+    }
+
+    try {
+      if (sound) {
+        await sound.unloadAsync();
+      }
+
+      const { sound: newSound } = await Audio.Sound.createAsync(
+        { uri: voice },
+        { shouldPlay: true }
+      );
+      
+      setSound(newSound);
+      setIsPlaying(true);
+
+      newSound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          setIsPlaying(false);
+        }
+      });
+
+      await newSound.playAsync();
+    } catch (error) {
+      console.error('Erreur lors de la lecture:', error);
+      Alert.alert('Erreur', 'Impossible de lire l\'audio');
+    }
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: color }] }>
@@ -16,13 +52,6 @@ export default function HomeScreen() {
             <Text style={styles.kicker}>Profil</Text>
             <Text style={styles.title}>Accueil</Text>
           </View>
-          <Pressable
-            hitSlop={10}
-            style={styles.iconButton}
-            onPress={() => router.push('/settings')}
-          >
-            <Ionicons name="settings-outline" size={22} color="#0f172a" />
-          </Pressable>
         </View>
 
         {/* Photo de profil */}
@@ -39,7 +68,30 @@ export default function HomeScreen() {
         <Text style={styles.text}>
           {isConnected && name ? `Bienvenue ${name}.` : 'Connecte-toi d\'abord depuis la page racine.'}
         </Text>
-        <Text style={styles.text}>Cette vue lit les données globales depuis Redux.</Text>
+        
+        {/* Icônes audio et paramètres */}
+        <View style={styles.iconRow}>
+          <Pressable
+            hitSlop={10}
+            style={[styles.actionButton, !voice && styles.actionButtonDisabled]}
+            onPress={playVoice}
+            disabled={!voice || isPlaying}
+          >
+            <Ionicons 
+              name={isPlaying ? "volume-high" : "volume-medium"} 
+              size={32} 
+              color={voice ? "#0f766e" : "#cbd5e1"} 
+            />
+          </Pressable>
+          
+          <Pressable
+            hitSlop={10}
+            style={styles.actionButton}
+            onPress={() => router.push('/settings')}
+          >
+            <Ionicons name="settings" size={32} color="#0f766e" />
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -86,16 +138,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#334155',
   },
-  iconButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8fafc',
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
   profileImageContainer: {
     alignItems: 'center',
     marginVertical: 16,
@@ -117,5 +159,24 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#e2e8f0',
     borderStyle: 'dashed',
+  },
+  iconRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 32,
+    marginTop: 16,
+  },
+  actionButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#f8fafc',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#e2e8f0',
+  },
+  actionButtonDisabled: {
+    backgroundColor: '#f1f5f9',
   },
 });

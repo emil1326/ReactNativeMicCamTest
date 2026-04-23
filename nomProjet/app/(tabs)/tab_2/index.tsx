@@ -102,7 +102,6 @@ export default function AudioScreen() {
     setRecordingUri(null);
     setIsPlaying(false);
     dispatch(updateStudent({ voice: null }));
-    Alert.alert('Supprimé', 'Enregistrement supprimé');
   }
 
   const currentUri = recordingUri || savedVoice;
@@ -147,6 +146,15 @@ export default function AudioScreen() {
             {isRecording ? "ARRÊTER L'ENREGISTREMENT" : "COMMENCER L'ENREGISTREMENT"}
           </Text>
         </TouchableOpacity>
+
+        {currentUri && (
+          <View style={styles.uriContainer}>
+            <Text style={styles.uriLabel}>Chemin de sauvegarde:</Text>
+            <Text style={styles.uriText} numberOfLines={3}>
+              {currentUri}
+            </Text>
+          </View>
+        )}
 
         {!currentUri && !isRecording && (
           <Text style={styles.infoText}>
@@ -207,6 +215,29 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  uriContainer: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    width: '100%',
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  uriLabel: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#0f766e',
+  },
+  uriText: {
+    fontSize: 12,
+    color: '#64748b',
+    lineHeight: 18,
   },
   infoText: {
     fontSize: 14,

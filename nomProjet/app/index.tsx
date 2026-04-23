@@ -95,6 +95,8 @@ export default function LoginScreen() {
 
           {statusMessage ? <Text style={styles.status}>{statusMessage}</Text> : null}
         </View>
+        
+        <Text style={styles.footer}>Jonathan Basque & Emilien Devauchelle</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -163,5 +165,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: '#b91c1c',
+  },
+  footer: {
+    marginTop: 24,
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#64748b',
+    fontWeight: '500',
   },
 });
