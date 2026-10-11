@@ -41,8 +41,3 @@ npx expo start
 ```
 
 Ensuite, scanner le code QR avec Expo Go. Pour Firestore, publier les règles de `mobile/firestore.rules` dans la console Firebase (ou avec `firebase deploy --only firestore:rules`).
-
-## L'équipe
-
-- **Jonathan Basque** ([@Jonathan-333](https://github.com/Jonathan-333)) : l'écran Caméra (avant / arrière, flash, zoom, photo utilisée comme photo de profil), l'écran Audio (enregistrement, sauvegarde, lecture) et leur lien avec le profil.
-- **Emilien Devauchelle** ([@emil1326](https://github.com/emil1326)) : la structure de l'app et la navigation, le store Redux persistant, la sauvegarde dans Firestore, la connexion, les réglages et le système de couleurs.
