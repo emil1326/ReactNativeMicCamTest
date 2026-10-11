@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "nomProjet",
-    "slug": "nomProjet",
+    "name": "Profil Étudiant",
+    "slug": "profil-etudiant",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,7 +35,7 @@
         "android.permission.READ_MEDIA_AUDIO"
       ]
     },
-    "scheme": "nomprojet",
+    "scheme": "profiletudiant",
     "web": {
       "favicon": "./assets/favicon.png"
     },

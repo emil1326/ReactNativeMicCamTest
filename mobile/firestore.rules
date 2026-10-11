@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // The app has its own login (no Firebase Auth): it reads one profile by name
+    // and saves it. Nobody can list every student, delete one, or write other fields.
+    match /students/{studentId} {
+      allow get: if true;
+      allow list, delete: if false;
+      allow create, update: if isValidStudent(request.resource.data);
+    }
+
+    function isValidStudent(student) {
+      return student.keys().hasOnly(['name', 'password', 'image', 'voice', 'color', 'isConnected'])
+        && student.name is string && student.name.size() > 0 && student.name.size() <= 50
+        && student.password is string && student.password.size() <= 64
+        && student.color is string && student.color.size() <= 20
+        && (student.image == null || (student.image is string && student.image.size() <= 2048))
+        && (student.voice == null || (student.voice is string && student.voice.size() <= 2048))
+        && student.isConnected is bool;
+    }
+  }
+}

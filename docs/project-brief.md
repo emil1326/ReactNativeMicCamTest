@@ -1,6 +1,6 @@
 # KBK Projet 2026 - Resume
 
-Source: "KBK Projet 2026.pdf"
+Résumé de l'énoncé du cours (le PDF n'est pas dans le dépôt).
 
 ## Scope
 - React Native app with Expo Router.
